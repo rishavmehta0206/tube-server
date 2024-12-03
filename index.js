@@ -33,23 +33,13 @@ app.use((err, req, res, next) => {
   });
 });
 
+mongoose.connect(process.env.MONGO_URL).then(
+  (res) => console.log("connection established"),
+  (err) => console.log("error in connection")
+);
+
 app.listen("8800", async () => {
   console.log("running");
   await connectToDb().then(mess => console.log(mess));
 });
 
-const connectToDb = async () => {
-  const connection = {};
-  try {
-    if (connection.isConnected) {
-      console.log("Using existing connection");
-      return;
-    }
-    const db = await mongoose.connect(process.env.MONGO_URL);
-    connection.isConnected = db.connections[0].readyState;
-    return 'connected to db'
-  } catch (error) {
-    console.log(error);
-    throw new Error(error);
-  }
-};
